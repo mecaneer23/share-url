@@ -33,14 +33,16 @@ def main() -> None:
     Entry point for share url. Asks for a url, generates the redirect,
     outputs the local share url, and hosts the server.
     """
-    PORT = 8000
-    
+
+    port = 8000
+
     with open("index.html", "w", encoding="utf-8") as file:
         file.write(f'<script>window.location.href="{input("Enter a url: ")}";</script>')
 
-    print(f"http://{get_interface_ip(socket.AF_INET)}:{PORT}")
+    print(f"http://{get_interface_ip(socket.AF_INET)}:{port}")
 
-    HTTPServer(("0.0.0.0", PORT), SimpleHTTPRequestHandler).serve_forever()
+    HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler).serve_forever()
+
 
 if __name__ == "__main__":
     main()
