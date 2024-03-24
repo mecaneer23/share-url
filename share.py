@@ -41,7 +41,13 @@ def main() -> None:
 
     print(f"http://{get_interface_ip(socket.AF_INET)}:{port}")
 
-    HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler).serve_forever()
+    with HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler) as server:
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            server.server_close()
 
 
 if __name__ == "__main__":
