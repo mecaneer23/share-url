@@ -6,7 +6,12 @@ Share a url on a local network
 
 import socket
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from qrcode.main import QRCode
+
+try:
+    from qrcode.main import QRCode
+    QRCODE_EXISTS = True
+except ModuleNotFoundError:
+    QRCODE_EXISTS = False  # pyright: ignore[reportConstantRedefinition]
 
 
 def get_interface_ip(family: socket.AddressFamily) -> str:  # pylint: disable=no-member
@@ -31,6 +36,8 @@ def get_interface_ip(family: socket.AddressFamily) -> str:  # pylint: disable=no
 
 def print_qrcode(data: str) -> None:
     """Print a qrcode to the terminal"""
+    if not QRCODE_EXISTS:
+        return
     qr = QRCode()
     qr.add_data(data)
     qr.make(fit=True)
