@@ -6,6 +6,7 @@ Share a url on a local network
 
 import socket
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+from qrcode.main import QRCode
 
 
 def get_interface_ip(family: socket.AddressFamily) -> str:  # pylint: disable=no-member
@@ -28,6 +29,14 @@ def get_interface_ip(family: socket.AddressFamily) -> str:  # pylint: disable=no
         return s.getsockname()[0]  # type: ignore
 
 
+def print_qrcode(data: str) -> None:
+    """Print a qrcode to the terminal"""
+    qr = QRCode()
+    qr.add_data(data)
+    qr.make(fit=True)
+    qr.print_ascii(invert=True)
+
+
 def main() -> None:
     """
     Entry point for share url. Asks for a url, generates the redirect,
@@ -39,15 +48,12 @@ def main() -> None:
     with open("index.html", "w", encoding="utf-8") as file:
         file.write(f'<script>window.location.href="{input("Enter a url: ")}";</script>')
 
-    print(f"http://{get_interface_ip(socket.AF_INET)}:{port}")
+    ip = f"http://{get_interface_ip(socket.AF_INET)}:{port}"
+    print_qrcode(ip)
+    print(ip)
 
     with HTTPServer(("0.0.0.0", port), SimpleHTTPRequestHandler) as server:
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            pass
-        finally:
-            server.server_close()
+        server.serve_forever()
 
 
 if __name__ == "__main__":
