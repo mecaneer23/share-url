@@ -8,7 +8,7 @@ import socket
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 
-def get_interface_ip(family: socket.AddressFamily) -> str:
+def get_interface_ip(family: socket.AddressFamily) -> str:  # pylint: disable=no-member
     """
     Get the IP address of an external interface. Used when binding to
     0.0.0.0 or ::1 to show a more useful URL.
